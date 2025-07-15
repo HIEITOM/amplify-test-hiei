@@ -1,0 +1,36 @@
+type Consultation @model @auth(rules: [
+  { allow: owner },
+  { allow: groups, groups: ["admin"] }
+]) {
+  id: ID!
+  title: String!
+  content: String!
+  status: String!
+  attachedFileUrl: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Action @model @auth(rules: [
+  { allow: groups, groups: ["admin"] }
+]) {
+  id: ID!
+  consultationId: ID!
+  actionType: String!
+  comment: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type User @model @auth(rules: [
+  { allow: owner },
+  { allow: groups, groups: ["admin"] }
+]) {
+  id: ID!
+  name: String!
+  email: String!
+  role: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
