@@ -1,0 +1,30 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cognito-idp:*",
+        "cognito-identity:*",
+        "appsync:*",
+        "dynamodb:*",
+        "s3:*",
+        "lambda:*",
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:PassRole",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "cloudformation:*",
+        "logs:*",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "ssm:DeleteParameter"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
