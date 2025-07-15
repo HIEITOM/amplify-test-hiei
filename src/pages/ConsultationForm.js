@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { generateClient } from 'aws-amplify/api';
 import { uploadData } from 'aws-amplify/storage';
-import { createConsultation } from '../graphql/mutations';
+import type { Schema } from '../../amplify/data/resource';
 
-const client = generateClient();
+const client = generateClient<Schema>();
 
 const ConsultationForm = () => {
   const [formData, setFormData] = useState({
@@ -29,14 +29,9 @@ const ConsultationForm = () => {
         fileUrl = result.key;
       }
 
-      await client.graphql({
-        query: createConsultation,
-        variables: {
-          input: {
-            ...formData,
-            attachedFileUrl: fileUrl
-          }
-        }
+      await client.models.Consultation.create({
+        ...formData,
+        attachedFileUrl: fileUrl
       });
 
       alert('相談を送信しました');

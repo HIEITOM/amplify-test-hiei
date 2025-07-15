@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
-import { listConsultations } from '../graphql/queries';
+import type { Schema } from '../../amplify/data/resource';
 
-const client = generateClient();
+const client = generateClient<Schema>();
 
 const ConsultationList = () => {
   const [consultations, setConsultations] = useState([]);
@@ -14,10 +14,8 @@ const ConsultationList = () => {
 
   const fetchConsultations = async () => {
     try {
-      const result = await client.graphql({
-        query: listConsultations
-      });
-      setConsultations(result.data.listConsultations.items);
+      const { data: consultations } = await client.models.Consultation.list();
+      setConsultations(consultations);
     } catch (error) {
       console.error('Error fetching consultations:', error);
     } finally {

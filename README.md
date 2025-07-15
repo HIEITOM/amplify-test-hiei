@@ -11,38 +11,31 @@ AWS Amplifyを活用したパワハラ相談・管理システム
 - ファイル添付機能（Amazon S3）
 - リアルタイム通知
 
-## セットアップ
+## セットアップ（Amplify Gen2）
 
 1. 依存関係のインストール
 ```bash
 npm install
 ```
 
-2. Amplify CLIのインストール
+2. Amplify Gen2 CLIのインストール
 ```bash
-npm install -g @aws-amplify/cli
+npm install -g @aws-amplify/backend-cli
 ```
 
-3. Amplifyプロジェクトの初期化
+3. サンドボックス環境の起動
 ```bash
-amplify init
+npx ampx sandbox
 ```
 
-4. バックエンドサービスの追加
-```bash
-amplify add auth
-amplify add api
-amplify add storage
-```
-
-5. デプロイ
-```bash
-amplify push
-```
-
-6. アプリケーションの起動
+4. アプリケーションの起動
 ```bash
 npm start
+```
+
+5. 本番デプロイ
+```bash
+npx ampx pipeline-deploy --branch main
 ```
 
 ## 使用技術
@@ -55,13 +48,18 @@ npm start
 - Amazon S3
 - Amazon SES/SNS
 
-## ディレクトリ構造
+## ディレクトリ構造（Gen2）
 
 ```
+amplify/
+├── auth/           # 認証設定
+├── data/           # GraphQLスキーマ
+├── storage/        # ストレージ設定
+└── backend.ts      # バックエンド設定
+
 src/
 ├── components/     # 共通コンポーネント
 ├── pages/         # ページコンポーネント
-├── graphql/       # GraphQL クエリ・ミューテーション
 ├── App.js         # メインアプリケーション
 └── index.js       # エントリーポイント
 ```

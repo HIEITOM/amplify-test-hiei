@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/api';
-import { listConsultations } from '../graphql/queries';
-import { updateConsultation, createAction } from '../graphql/mutations';
+import type { Schema } from '../../amplify/data/resource';
 
-const client = generateClient();
+const client = generateClient<Schema>();
 
 const AdminDashboard = () => {
   const [consultations, setConsultations] = useState([]);
@@ -17,10 +16,8 @@ const AdminDashboard = () => {
 
   const fetchAllConsultations = async () => {
     try {
-      const result = await client.graphql({
-        query: listConsultations
-      });
-      setConsultations(result.data.listConsultations.items);
+      const { data: consultations } = await client.models.Consultation.list();
+      setConsultations(consultations);
     } catch (error) {
       console.error('Error fetching consultations:', error);
     } finally {
@@ -30,25 +27,15 @@ const AdminDashboard = () => {
 
   const updateStatus = async (consultationId, newStatus) => {
     try {
-      await client.graphql({
-        query: updateConsultation,
-        variables: {
-          input: {
-            id: consultationId,
-            status: newStatus
-          }
-        }
+      await client.models.Consultation.update({
+        id: consultationId,
+        status: newStatus
       });
       
-      await client.graphql({
-        query: createAction,
-        variables: {
-          input: {
-            consultationId,
-            actionType: 'status_update',
-            comment: `ステータスを${newStatus}に変更`
-          }
-        }
+      await client.models.Action.create({
+        consultationId,
+        actionType: 'status_update',
+        comment: `ステータスを${newStatus}に変更`
       });
 
       fetchAllConsultations();
@@ -63,15 +50,10 @@ const AdminDashboard = () => {
     if (!selectedConsultation || !actionComment.trim()) return;
 
     try {
-      await client.graphql({
-        query: createAction,
-        variables: {
-          input: {
-            consultationId: selectedConsultation.id,
-            actionType: 'comment',
-            comment: actionComment
-          }
-        }
+      await client.models.Action.create({
+        consultationId: selectedConsultation.id,
+        actionType: 'comment',
+        comment: actionComment
       });
 
       setActionComment('');
